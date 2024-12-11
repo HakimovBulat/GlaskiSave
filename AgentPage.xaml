@@ -7,12 +7,25 @@
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="AgentPage">
-
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
-        <ListView Grid.Row="0" Name="AgentListView">
+        <StackPanel Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Center">
+            <TextBox Name="TBoxSearch" Width="250" Height="30" FontSize="18" TextChanged="TBoxSearch_TextChanged" Margin="5"/>
+            <ComboBox Width="250" FontSize="14" Height="30" Name="ComboBoxAgent" SelectionChanged="ComboBoxAgent_SelectionChanged" Margin="5">
+                <TextBlock Text="Сортировка"/>
+                <TextBlock Text="Наимнования по возрастанию"/>
+                <TextBlock Text="Наименования по убыванию"/>
+                <TextBlock Text="Приоритет по возрастанию"/>
+                <TextBlock Text="Проиритет по убыванию"/>
+            </ComboBox>
+            <ComboBox Width="250" FontSize="14" Height="30" Name="ComboBoxAgentType" SelectionChanged="ComboBoxAgentType_SelectionChanged" Margin="5">
+            </ComboBox>
+        </StackPanel>
+        <ListView Grid.Row="1" Name="AgentListView">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <Grid>
@@ -26,22 +39,41 @@
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-                        <Image Grid.Row="0" Grid.Column="0" Height="175" Stretch="UniformToFill">
+                        <Image Grid.Row="0" Grid.Column="0" Width="200" Grid.RowSpan="4" Stretch="UniformToFill" HorizontalAlignment="Center">
                             <Image.Source>
                                 <Binding Path="Logo">
                                     <Binding.TargetNullValue>
                                         <ImageSource>
-                                            res\picture.png
+                                            \res\picture.png
                                         </ImageSource>
                                     </Binding.TargetNullValue>
                                 </Binding>
                             </Image.Source>
                         </Image>
-                        
-                        
+                        <StackPanel  Grid.Row="0" Grid.Column="1" Orientation="Horizontal" Margin="2">
+                            <TextBlock Text="{Binding AgentTypeString}" FontSize="20"/>
+                            <TextBlock Text=" | " FontSize="20"/>
+                            <TextBlock Text="{Binding Title}" FontSize="20"/>
+                        </StackPanel>
+                        <TextBlock Text="Продажи за год" Grid.Row="1" Grid.Column="1" FontSize="20"/>
+                        <TextBlock Text="{Binding Phone}" Grid.Row="2" Grid.Column="1" FontSize="20"/>
+                        <TextBlock Text="{Binding Priority, StringFormat=Приоритет: {0}}" Grid.Row="3" Grid.Column="1" FontSize="20"/>
                     </Grid>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">
+            <TextBlock Name="TBCount" FontSize="16" Height="20"></TextBlock>
+            <TextBlock Name="TBAllRecords" FontSize="16" Height="20"></TextBlock>
+            <Button Name="LeftDirButton" Content="&lt;" Width="20" Height="25" Click="LeftDirButton_Click"></Button>
+            <ListBox FontSize="16" Name="PageListBox" MouseUp="PageListBox_MouseUp">
+                <ListBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel Orientation="Horizontal"/>
+                    </ItemsPanelTemplate>
+                </ListBox.ItemsPanel>
+            </ListBox>
+            <Button Name="RightDirButton" Content="&gt;" Width="20" Height="25" Click="RightDirButton_Click"></Button>
+        </StackPanel>
     </Grid>
 </Page>
