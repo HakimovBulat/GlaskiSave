@@ -15,18 +15,16 @@ namespace Лаба_10
     
     public partial class HakimovGlaskiSaveEntities : DbContext
     {
-        public HakimovGlaskiSaveEntities()
-            : base("name=HakimovGlaskiSaveEntities")
-        {
-        }
         private static HakimovGlaskiSaveEntities _context;
         public static HakimovGlaskiSaveEntities GetContext()
         {
             if (_context == null)
-            {
                 _context = new HakimovGlaskiSaveEntities();
-            }
             return _context;
+        }
+        public HakimovGlaskiSaveEntities()
+            : base("name=HakimovGlaskiSaveEntities")
+        {
         }
     
         protected override void OnModelCreating(DbModelBuilder modelBuilder)

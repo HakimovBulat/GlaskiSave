@@ -37,8 +37,7 @@ namespace Лаба_10
                     currentAgents[i].Logo = "res\\picture.png";
                 for (int j = 0; j < currentTypes.Count; j++)
                 {
-                    if (currentAgents[i].AgentTypeID == currentTypes[j].ID)
-                    {
+                    if (currentAgents[i].AgentTypeID == currentTypes[j].ID) {
                         currentAgents[i].AgentTypeString = currentTypes[j].Title;
                         break;
                     }
@@ -85,7 +84,10 @@ namespace Лаба_10
                 currentAgents = currentAgents.OrderBy(p => p.Priority).ToList();
             else if (ComboBoxAgent.SelectedIndex == 4)
                 currentAgents = currentAgents.OrderByDescending(p => p.Priority).ToList();
-
+            else if (ComboBoxAgent.SelectedIndex == 5)
+                currentAgents = currentAgents.OrderBy(p => p.Percent).ToList();
+            else if (ComboBoxAgent.SelectedIndex == 6)
+                currentAgents = currentAgents.OrderByDescending(p => p.Percent).ToList();
             if (ComboBoxAgentType.SelectedIndex != -1)
             {
                 var currentAgentsNew = new List<Agent> { };
@@ -216,6 +218,56 @@ namespace Лаба_10
                 HakimovGlaskiSaveEntities.GetContext().ChangeTracker.Entries().ToList().ForEach(p => p.Reload());
                 AgentListView.ItemsSource = HakimovGlaskiSaveEntities.GetContext().Agent.ToList();
                 UpdateAgents();
+            }
+        }
+
+        private void AddButton_Click(object sender, RoutedEventArgs e)
+        {
+            Manager.MainFrame.Navigate(new AddEditPage(null));
+        }
+
+        private void EditButton_Click(object sender, RoutedEventArgs e)
+        {
+            Manager.MainFrame.Navigate(new AddEditPage((sender as Button).DataContext as Agent));
+        }
+
+        private void AgentListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (AgentListView.SelectedItems.Count > 1)
+                ChangeProirity.Visibility = Visibility.Visible;
+            else
+                ChangeProirity.Visibility = Visibility.Hidden;
+        }
+
+        private void ChangeProirity_Click(object sender, RoutedEventArgs e)
+        {
+            int maxPriority = 0;
+            foreach(Agent agent in AgentListView.SelectedItems)
+            {
+                if (agent.Priority > maxPriority)
+                    maxPriority = agent.Priority;
+            }
+            SetWindow myWindow = new SetWindow(maxPriority);
+            myWindow.ShowDialog();
+            if (Convert.ToInt32(myWindow.TBPriority.Text) < 0)
+                MessageBox.Show("Приоритет должен быть положительным");
+            if (string.IsNullOrEmpty(myWindow.TBPriority.Text))
+                MessageBox.Show("Изменений не произошло");
+            else
+            {
+                int newPriority = Convert.ToInt32(myWindow.TBPriority.Text);
+                foreach (Agent agent in AgentListView.SelectedItems)
+                    agent.Priority = newPriority;
+                try
+                {
+                    HakimovGlaskiSaveEntities.GetContext().SaveChanges();
+                    MessageBox.Show("Изменения сохранены");
+                    UpdateAgents();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message.ToString());
+                }
             }
         }
     }
